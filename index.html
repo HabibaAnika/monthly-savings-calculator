@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Savings function</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="flex flex-col items-center h-screen justify-center">
+        <h1 class="font text-4xl font-bold">Monthly Savings Calculator</h1>
+
+        <!-- Calculation input =============================================== -->
+        <div class="my-5">
+            <input type="text" id="income" placeholder="Enter comma-separated values"
+                class="border p-2 w-60 rounded focus-visible:outline-none">
+            <input type="number" id="livingCost" placeholder="Enter living cost"
+                class="border p-2 w-60 rounded focus-visible:outline-none">
+            <button class="py-2 px-5 bg-pink-200 hover:bg-pink-300 text-pink-900 rounded"
+                onclick="calculateSavings()">Calculate</button>
+            <p id="invalidText" class="text-red-400"></p>
+        </div>
+
+
+        <!-- Calculation Output =============================================== -->
+        <div>
+            <p id="earnAmount"></p>
+            <p id="livingCostAmount"></p>
+            <p id="savingsAmount"></p>
+            <p id="earnStatus" class="font-bold"></p>
+        </div>
+    </div>
+
+
+    <script>
+        // Calculation =========================>
+        function monthlySavings(arr, livinCost) {
+            const earnStatus = document.getElementById('earnStatus');
+            const earnAmount = document.getElementById('earnAmount');
+            const livingCostAmount = document.getElementById('livingCostAmount');
+            const savingsAmount = document.getElementById('savingsAmount');
+            if (Array.isArray(arr)) {
+                const arrSum = arr.reduce((a, b) => a + b);
+                earnAmount.innerHTML = `Total Earn: <strong> [${arr}] + ${arrSum}</strong>`;
+                livingCostAmount.innerHTML = `Living Cost: <strong>${livinCost}</strong>`;
+                savingsAmount.innerHTML = `Savings amount: <strong>${arrSum - livinCost}</strong>`;
+
+
+                if (arrSum > livinCost) {
+                    earnStatus.innerHTML = "Good earn ";
+                    earnStatus.classList.add("text-green-500");
+                    earnStatus.classList.remove("text-red-500");
+                } else {
+                    earnStatus.innerHTML = "Earn more";
+                    earnStatus.classList.add("text-red-500");
+                    earnStatus.classList.remove("text-green-500");
+                }
+            } else {
+                document.getElementById('invalidText').textContent = "Invalid input";
+            }
+        }
+
+        // input validation ==================>
+        function calculateSavings() {
+            const incomeInput = document.getElementById('income').value;
+            const livingCostInput = parseFloat(document.getElementById('livingCost').value);
+
+            const incomeArray = incomeInput.split(',').map(item => parseFloat(item));
+            console.log(incomeArray);
+
+            if (isNaN(livingCostInput) || incomeArray.some(isNaN)) {
+                document.getElementById('invalidText').textContent = "Invalid input. Please enter valid numbers.";
+            } else {
+                monthlySavings(incomeArray, livingCostInput);
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
